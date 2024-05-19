@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(logo.jpg);
+            width: 100%;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 10px 0;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .form-group {
+            width: 30%;
+            margin-bottom: 15px;
+        }
+        .form-group.full {
+            width: 100%;
+        }
+        .form-group h2 {
+            margin: 0 0 5px;
+            color: #666;
+            font-size: 16px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px;
+            background-color: #32b1dc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 32%;
+        }
+        button:hover {
+            background-color: #4c85ae;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenidos</h1>
+        <h1>Gestión de productos</h1>
+        <form id="form-product">
+            <div class="form-group">
+                <h2>Nombre</h2>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
+            </div>
+            <div class="form-group">
+                <h2>Composición</h2>
+                <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto" required>
+            </div>
+            <div class="form-group">
+                <h2>Precio</h2>
+                <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto" required>
+            </div>
+            <div class="form-group">
+                <h2>Forma</h2>
+                <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto" required>
+            </div>
+            <div class="form-group">
+                <h2>Dosis</h2>
+                <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto" required>
+            </div>
+            <div class="form-group">
+                <h2>Indicaciones</h2>
+                <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones" required>
+            </div>
+            <div class="form-group">
+                <h2>Contraindicaciones</h2>
+                <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones" required>
+            </div>
+            <div class="form-group">
+                <h2>Efectos</h2>
+                <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios" required>
+            </div>
+            <div class="form-group">
+                <h2>Administración</h2>
+                <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto" required>
+            </div>
+            <div class="form-group full">
+                <h2>Caducidad</h2>
+                <input type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
+            </div>
+            <div class="button-group">
+                <button type="submit">Agregar producto</button>
+                <button type="submit">Modificar producto</button>
+                <button type="submit">Eliminar producto</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJRq8icx68A9is7mZQpuxFhUNafah8jEs",
+            authDomain: "farmacia-df0a7.firebaseapp.com",
+            projectId: "farmacia-df0a7",
+            storageBucket: "farmacia-df0a7.appspot.com",
+            messagingSenderId: "507394726016",
+            appId: "1:507394726016:web:30ea6a67bce7155fd86e65"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const productForm = document.getElementById("form-product");
+        productForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "producto"), {
+                nombre: productForm.nombre.value,
+                composicion: productForm.composicion.value,
+                precio: productForm.precio.value,
+                forma: productForm.forma.value,
+                dosis: productForm.dosis.value,
+                indicaciones: productForm.indicaciones.value,
+                contraindicaciones: productForm.contraindicaciones.value,
+                efectos: productForm.efectos.value,
+                administracion: productForm.administracion.value,
+                caducidad: productForm.caducidad.value,
+            });
+            productForm.reset();
+        });
+    </script>
+</body>
+</html>
