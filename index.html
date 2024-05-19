@@ -18,14 +18,16 @@
             background-size: cover;
         }
         .container {
-            background-color: #fff;
+            background-color: #a2dbf5;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 800px;
             box-sizing: border-box;
+            background-image: url();
         }
+        
         h1 {
             text-align: center;
             color: #333;
@@ -73,58 +75,71 @@
         button:hover {
             background-color: #4c85ae;
         }
+        .error-message {
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid red;
+            border-radius: 4px;
+            margin-top: 50px;
+            display: none;
+            background-color: red;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenidos</h1>
-        <h1>Gestión de productos</h1>
+        <h1 style="margin-bottom: 20px;">BIENVENIDO</h1>
+        <h1 style="margin-bottom: 50px;" >GESTIÓN DE PRODUCTOS</h1>
         <form id="form-product">
             <div class="form-group">
-                <h2>Nombre</h2>
+                <h2 style="margin-bottom: 10px;">Nombre:</h2>
                 <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
             </div>
             <div class="form-group">
-                <h2>Composición</h2>
+                <h2 style="margin-bottom: 10px;">Composición:</h2>
                 <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto">
             </div>
             <div class="form-group">
-                <h2>Precio</h2>
+                <h2 style="margin-bottom: 10px;">Precio:</h2>
                 <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto">
             </div>
             <div class="form-group">
-                <h2>Forma</h2>
+                <h2 style="margin-bottom: 10px;">Forma:</h2>
                 <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto">
             </div>
             <div class="form-group">
-                <h2>Dosis</h2>
+                <h2 style="margin-bottom: 10px;">Dosis:</h2>
                 <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto">
             </div>
             <div class="form-group">
-                <h2>Indicaciones</h2>
+                <h2 style="margin-bottom: 10px;">Indicaciones:</h2>
                 <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones">
             </div>
             <div class="form-group">
-                <h2>Contraindicaciones</h2>
+                <h2 style="margin-bottom: 10px;">Contraindicaciones:</h2>
                 <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones">
             </div>
             <div class="form-group">
-                <h2>Efectos</h2>
+                <h2 style="margin-bottom: 10px;">Efectos:</h2>
                 <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios">
             </div>
             <div class="form-group">
-                <h2>Administración</h2>
+                <h2 style="margin-bottom: 10px;">Administración:</h2>
                 <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto">
             </div>
-            <div class="form-group full">
-                <h2 style="text-align: center;">Caducidad</h2>
-                <input style="width: 50%; text-align: center;" type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad">
+            <div class="form-group full" style="display: flex; flex-direction: column; align-items: center;">
+                <h2 style="text-align: center; margin-bottom: 10px;" >Caducidad: </h2>
+                <input style="width: 50%; text-align: center; justify-content: center; align-items: center; " type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
             </div>
             <div class="button-group">
                 <button type="submit" id="addButton">Agregar producto</button>
                 <button type="button" id="updateButton">Modificar producto</button>
                 <button type="button" id="deleteButton">Eliminar producto</button>
             </div>
+            <div id="error-message" class="error-message"></div>
         </form>
     </div>
 
@@ -145,32 +160,54 @@
         const db = getFirestore(app);
 
         const productForm = document.getElementById("form-product");
+        const errorMessage = document.getElementById("error-message");
 
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            errorMessage.style.display = "none";
 
-            const formType = e.submitter.textContent;
+            const nombre = productForm.nombre.value.trim();
+            const composicion = productForm.composicion.value.trim();
+            const precio = productForm.precio.value.trim();
+            const forma = productForm.forma.value.trim();
+            const dosis = productForm.dosis.value.trim();
+            const indicaciones = productForm.indicaciones.value.trim();
+            const contraindicaciones = productForm.contraindicaciones.value.trim();
+            const efectos = productForm.efectos.value.trim();
+            const administracion = productForm.administracion.value.trim();
+            const caducidad = productForm.caducidad.value.trim();
 
-            if (formType === "Agregar producto") {
-                await addDoc(collection(db, "producto"), {
-                    nombre: productForm.nombre.value,
-                    composicion: productForm.composicion.value,
-                    precio: productForm.precio.value,
-                    forma: productForm.forma.value,
-                    dosis: productForm.dosis.value,
-                    indicaciones: productForm.indicaciones.value,
-                    contraindicaciones: productForm.contraindicaciones.value,
-                    efectos: productForm.efectos.value,
-                    administracion: productForm.administracion.value,
-                    caducidad: productForm.caducidad.value,
-                });
+            if (!nombre || !composicion || !precio || !forma || !dosis || !indicaciones || !contraindicaciones || !efectos || !administracion || !caducidad) {
+                errorMessage.textContent = "Todos los campos son obligatorios.";
+                errorMessage.style.display = "block";
+                return;
             }
 
-            productForm.reset();
+            try {
+                await addDoc(collection(db, "producto"), {
+                    nombre,
+                    composicion,
+                    precio,
+                    forma,
+                    dosis,
+                    indicaciones,
+                    contraindicaciones,
+                    efectos,
+                    administracion,
+                    caducidad,
+                });
+                alert("Producto agregado exitosamente.");
+                productForm.reset();
+            } catch (error) {
+                errorMessage.textContent = "Error al agregar el producto.";
+                errorMessage.style.display = "block";
+                console.error("Error adding document: ", error);
+            }
         });
 
         document.getElementById("deleteButton").addEventListener("click", async () => {
-            const productName = productForm.nombre.value;
+            errorMessage.style.display = "none";
+            const productName = productForm.nombre.value.trim();
             if (productName) {
                 const q = query(collection(db, "producto"), where("nombre", "==", productName));
                 const querySnapshot = await getDocs(q);
@@ -180,46 +217,48 @@
                         await deleteDoc(doc(db, "producto", docSnapshot.id));
                     });
                     alert("Producto eliminado exitosamente.");
+                    productForm.reset();
                 } else {
-                    alert("Producto no encontrado.");
+                    errorMessage.textContent = "Producto no encontrado.";
+                    errorMessage.style.display = "block";
                 }
-
-                productForm.reset();
             } else {
-                alert("Por favor, ingrese el nombre del producto que desea eliminar.");
+                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea eliminar.";
+                errorMessage.style.display = "block";
             }
         });
 
         document.getElementById("updateButton").addEventListener("click", async () => {
-            const productName = productForm.nombre.value;
+            errorMessage.style.display = "none";
+            const productName = productForm.nombre.value.trim();
             if (productName) {
                 const q = query(collection(db, "producto"), where("nombre", "==", productName));
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
                     const updateData = {};
-                    if (productForm.composicion.value) updateData.composicion = productForm.composicion.value;
-                    if (productForm.precio.value) updateData.precio = productForm.precio.value;
-                    if (productForm.forma.value) updateData.forma = productForm.forma.value;
-                    if (productForm.dosis.value) updateData.dosis = productForm.dosis.value;
-                    if (productForm.indicaciones.value) updateData.indicaciones = productForm.indicaciones.value;
-                    if (productForm.contraindicaciones.value) updateData.contraindicaciones = productForm.contraindicaciones.value;
-                    if (productForm.efectos.value) updateData.efectos = productForm.efectos.value;
-                    if (productForm.administracion.value) updateData.administracion = productForm.administracion.value;
-                    if (productForm.caducidad.value) updateData.caducidad = productForm.caducidad.value;
+                    if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
+                    if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
+                    if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
+                    if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
+                    if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
+                    if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
+                    if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
+                    if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
+                    if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
 
                     querySnapshot.forEach(async (docSnapshot) => {
                         await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
                     });
-
                     alert("Producto actualizado exitosamente.");
+                    productForm.reset();
                 } else {
-                    alert("Producto no encontrado.");
+                    errorMessage.textContent = "Producto no encontrado.";
+                    errorMessage.style.display = "block";
                 }
-
-                productForm.reset();
             } else {
-                alert("Por favor, ingrese el nombre del producto que desea modificar.");
+                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea modificar.";
+                errorMessage.style.display = "block";
             }
         });
     </script>
