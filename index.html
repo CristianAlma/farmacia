@@ -14,8 +14,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-image: url(https://www.axiomafv.com/wp-content/uploads/2023/04/imagen.jpg);
-            width: 100%;
+            background-image: url('https://www.axiomafv.com/wp-content/uploads/2023/04/imagen.jpg');
+            background-size: cover;
         }
         .container {
             background-color: #fff;
@@ -116,24 +116,22 @@
                 <h2>Administración</h2>
                 <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto" required>
             </div>
-            <div class="form-group full" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="form-group full">
                 <h2 style="text-align: center;">Caducidad</h2>
-                <input style="width: 50%; text-align: center; justify-content: center; align-items: center; " type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
+                <input style="width: 50%; text-align: center;" type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
             </div>
             <div class="button-group">
-                <button type="submit">Agregar producto</button>
-                <button type="submit">Modificar producto</button>
-                <button type="submit">Eliminar producto</button>
+                <button type="submit" id="addButton">Agregar producto</button>
+                <button type="button" id="updateButton">Modificar producto</button>
+                <button type="button" id="deleteButton">Eliminar producto</button>
             </div>
         </form>
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    
-        // Your web app's Firebase configuration
+        import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAJRq8icx68A9is7mZQpuxFhUNafah8jEs",
             authDomain: "farmacia-df0a7.firebaseapp.com",
@@ -142,18 +140,17 @@
             messagingSenderId: "507394726016",
             appId: "1:507394726016:web:30ea6a67bce7155fd86e65"
         };
-    
-        // Initialize Firebase
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-    
+
         const productForm = document.getElementById("form-product");
-        
+
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-    
-            const formType = e.submitter.textContent; // Get the button text to determine the action
-    
+
+            const formType = e.submitter.textContent;
+
             if (formType === "Agregar producto") {
                 await addDoc(collection(db, "producto"), {
                     nombre: productForm.nombre.value,
@@ -167,18 +164,63 @@
                     administracion: productForm.administracion.value,
                     caducidad: productForm.caducidad.value,
                 });
-            } else if (formType === "Eliminar producto") {
-                const productId = productForm.productId.value;
-                if (productId) {
-                    await deleteDoc(doc(db, "producto", productId));
-                } else {
-                    alert("Por favor, ingrese el ID del producto que desea eliminar.");
-                }
             }
-    
+
             productForm.reset();
         });
+
+        document.getElementById("deleteButton").addEventListener("click", async () => {
+            const productName = productForm.nombre.value;
+            if (productName) {
+                const q = query(collection(db, "producto"), where("nombre", "==", productName));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(async (docSnapshot) => {
+                        await deleteDoc(doc(db, "producto", docSnapshot.id));
+                    });
+                    alert("Producto eliminado exitosamente.");
+                } else {
+                    alert("Producto no encontrado.");
+                }
+
+                productForm.reset();
+            } else {
+                alert("Por favor, ingrese el nombre del producto que desea eliminar.");
+            }
+        });
+
+        document.getElementById("updateButton").addEventListener("click", async () => {
+            const productName = productForm.nombre.value;
+            if (productName) {
+                const q = query(collection(db, "producto"), where("nombre", "==", productName));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(async (docSnapshot) => {
+                        await updateDoc(doc(db, "producto", docSnapshot.id), {
+                            composicion: productForm.composicion.value,
+                            precio: productForm.precio.value,
+                            forma: productForm.forma.value,
+                            dosis: productForm.dosis.value,
+                            indicaciones: productForm.indicaciones.value,
+                            contraindicaciones: productForm.contraindicaciones.value,
+                            efectos: productForm.efectos.value,
+                            administracion: productForm.administracion.value,
+                            caducidad: productForm.caducidad.value,
+                        });
+                    });
+
+                    alert("Producto actualizado exitosamente.");
+                } else {
+                    alert("Producto no encontrado.");
+                }
+
+                productForm.reset();
+            } else {
+                alert("Por favor, ingrese el nombre del producto que desea modificar.");
+            }
+        });
     </script>
-    
 </body>
 </html>
