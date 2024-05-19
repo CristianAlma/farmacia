@@ -131,8 +131,8 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+        import { getFirestore, collection, addDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAJRq8icx68A9is7mZQpuxFhUNafah8jEs",
@@ -142,28 +142,43 @@
             messagingSenderId: "507394726016",
             appId: "1:507394726016:web:30ea6a67bce7155fd86e65"
         };
-
+    
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
+    
         const productForm = document.getElementById("form-product");
+        
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            await addDoc(collection(db, "producto"), {
-                nombre: productForm.nombre.value,
-                composicion: productForm.composicion.value,
-                precio: productForm.precio.value,
-                forma: productForm.forma.value,
-                dosis: productForm.dosis.value,
-                indicaciones: productForm.indicaciones.value,
-                contraindicaciones: productForm.contraindicaciones.value,
-                efectos: productForm.efectos.value,
-                administracion: productForm.administracion.value,
-                caducidad: productForm.caducidad.value,
-            });
+    
+            const formType = e.submitter.textContent; // Get the button text to determine the action
+    
+            if (formType === "Agregar producto") {
+                await addDoc(collection(db, "producto"), {
+                    nombre: productForm.nombre.value,
+                    composicion: productForm.composicion.value,
+                    precio: productForm.precio.value,
+                    forma: productForm.forma.value,
+                    dosis: productForm.dosis.value,
+                    indicaciones: productForm.indicaciones.value,
+                    contraindicaciones: productForm.contraindicaciones.value,
+                    efectos: productForm.efectos.value,
+                    administracion: productForm.administracion.value,
+                    caducidad: productForm.caducidad.value,
+                });
+            } else if (formType === "Eliminar producto") {
+                const productId = productForm.productId.value;
+                if (productId) {
+                    await deleteDoc(doc(db, "producto", productId));
+                } else {
+                    alert("Por favor, ingrese el ID del producto que desea eliminar.");
+                }
+            }
+    
             productForm.reset();
         });
     </script>
+    
 </body>
 </html>
