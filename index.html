@@ -86,39 +86,39 @@
             </div>
             <div class="form-group">
                 <h2>Composición</h2>
-                <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto" required>
+                <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto">
             </div>
             <div class="form-group">
                 <h2>Precio</h2>
-                <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto" required>
+                <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto">
             </div>
             <div class="form-group">
                 <h2>Forma</h2>
-                <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto" required>
+                <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto">
             </div>
             <div class="form-group">
                 <h2>Dosis</h2>
-                <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto" required>
+                <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto">
             </div>
             <div class="form-group">
                 <h2>Indicaciones</h2>
-                <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones" required>
+                <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones">
             </div>
             <div class="form-group">
                 <h2>Contraindicaciones</h2>
-                <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones" required>
+                <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones">
             </div>
             <div class="form-group">
                 <h2>Efectos</h2>
-                <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios" required>
+                <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios">
             </div>
             <div class="form-group">
                 <h2>Administración</h2>
-                <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto" required>
+                <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto">
             </div>
             <div class="form-group full">
                 <h2 style="text-align: center;">Caducidad</h2>
-                <input style="width: 50%; text-align: center;" type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
+                <input style="width: 50%; text-align: center;" type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad">
             </div>
             <div class="button-group">
                 <button type="submit" id="addButton">Agregar producto</button>
@@ -197,18 +197,19 @@
                 const querySnapshot = await getDocs(q);
 
                 if (!querySnapshot.empty) {
+                    const updateData = {};
+                    if (productForm.composicion.value) updateData.composicion = productForm.composicion.value;
+                    if (productForm.precio.value) updateData.precio = productForm.precio.value;
+                    if (productForm.forma.value) updateData.forma = productForm.forma.value;
+                    if (productForm.dosis.value) updateData.dosis = productForm.dosis.value;
+                    if (productForm.indicaciones.value) updateData.indicaciones = productForm.indicaciones.value;
+                    if (productForm.contraindicaciones.value) updateData.contraindicaciones = productForm.contraindicaciones.value;
+                    if (productForm.efectos.value) updateData.efectos = productForm.efectos.value;
+                    if (productForm.administracion.value) updateData.administracion = productForm.administracion.value;
+                    if (productForm.caducidad.value) updateData.caducidad = productForm.caducidad.value;
+
                     querySnapshot.forEach(async (docSnapshot) => {
-                        await updateDoc(doc(db, "producto", docSnapshot.id), {
-                            composicion: productForm.composicion.value,
-                            precio: productForm.precio.value,
-                            forma: productForm.forma.value,
-                            dosis: productForm.dosis.value,
-                            indicaciones: productForm.indicaciones.value,
-                            contraindicaciones: productForm.contraindicaciones.value,
-                            efectos: productForm.efectos.value,
-                            administracion: productForm.administracion.value,
-                            caducidad: productForm.caducidad.value,
-                        });
+                        await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
                     });
 
                     alert("Producto actualizado exitosamente.");
