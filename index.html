@@ -18,13 +18,14 @@
             background-size: cover;
         }
         .container {
-           position: relative;
+            position: relative;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 800px;
             box-sizing: border-box;
+            margin-bottom: 20px; /* Add margin to create space between container and table */
         }
         .container img{
             position: absolute;
@@ -94,61 +95,101 @@
             display: none;
             background-color: red;
         }
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div><img src="https://scrconsultores.com.pe/wp-content/uploads/2023/11/2-1.png" alt=""></div>
-        <h1 style="margin-bottom: 20px;">BIENVENIDO</h1>
-        <h1 style="margin-bottom: 50px;" >GESTIÓN DE PRODUCTOS</h1>
-        <form id="form-product">
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Nombre:</h2>
-                <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Composición:</h2>
-                <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Precio:</h2>
-                <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Forma:</h2>
-                <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Dosis:</h2>
-                <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Indicaciones:</h2>
-                <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Contraindicaciones:</h2>
-                <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Efectos:</h2>
-                <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios">
-            </div>
-            <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Administración:</h2>
-                <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto">
-            </div>
-            <div class="form-group full" style="display: flex; flex-direction: column; align-items: center;">
-                <h2 style="text-align: center; margin-bottom: 10px;" >Caducidad: </h2>
-                <input type="date" class="form-control" style="width: 50%; text-align: center; justify-content: center; align-items: center; " type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
-            </div>
-            <div class="button-group">
-                <button type="submit" id="addButton">Agregar producto</button>
-                <button type="button" id="updateButton">Modificar producto</button>
-                <button type="button" id="deleteButton">Eliminar producto</button>
-            </div>
-            <div id="error-message" class="error-message"></div>
-        </form>
+    <div class="flex-container">
+        <div class="container">
+            <div><img src="https://scrconsultores.com.pe/wp-content/uploads/2023/11/2-1.png" alt=""></div>
+            <h1 style="margin-bottom: 20px;">BIENVENIDO</h1>
+            <h1 style="margin-bottom: 50px;" >GESTIÓN DE PRODUCTOS</h1>
+            <form id="form-product">
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Nombre:</h2>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Composición:</h2>
+                    <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Precio:</h2>
+                    <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Forma:</h2>
+                    <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Dosis:</h2>
+                    <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Indicaciones:</h2>
+                    <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Contraindicaciones:</h2>
+                    <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Efectos:</h2>
+                    <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios">
+                </div>
+                <div class="form-group">
+                    <h2 style="margin-bottom: 10px;">Administración:</h2>
+                    <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto">
+                </div>
+                <div class="form-group full" style="display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="text-align: center; margin-bottom: 10px;" >Caducidad: </h2>
+                    <input type="date" class="form-control" style="width: 50%; text-align: center; justify-content: center; align-items: center; " type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" id="addButton">Agregar producto</button>
+                    <button type="button" id="updateButton">Modificar producto</button>
+                    <button type="button" id="deleteButton">Eliminar producto</button>
+                </div>
+                <div id="error-message" class="error-message"></div>
+            </form>
+        </div>
+
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Composición</th>
+                    <th>Precio</th>
+                    <th>Forma</th>
+                    <th>Dosis</th>
+                    <th>Indicaciones</th>
+                    <th>Contraindicaciones</th>
+                    <th>Efectos</th>
+                    <th>Administración</th>
+                    <th>Caducidad</th>
+                </tr>
+            </thead>
+            <tbody id="product-table-body">
+                <!-- Aquí se añadirán las filas de los productos -->
+            </tbody>
+        </table>
     </div>
 
     <script type="module">
@@ -169,6 +210,7 @@
 
         const productForm = document.getElementById("form-product");
         const errorMessage = document.getElementById("error-message");
+        const productTableBody = document.getElementById("product-table-body");
 
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -204,6 +246,23 @@
                     administracion,
                     caducidad,
                 });
+
+                // Agregar una nueva fila a la tabla con los datos del producto
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${nombre}</td>
+                    <td>${composicion}</td>
+                    <td>${precio}</td>
+                    <td>${forma}</td>
+                    <td>${dosis}</td>
+                    <td>${indicaciones}</td>
+                    <td>${contraindicaciones}</td>
+                    <td>${efectos}</td>
+                    <td>${administracion}</td>
+                    <td>${caducidad}</td>
+                `;
+                productTableBody.appendChild(newRow);
+
                 alert("Producto agregado exitosamente.");
                 productForm.reset();
             } catch (error) {
