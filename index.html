@@ -178,6 +178,7 @@
             <div id="error-message" class="error-message"></div>
         </form>
     </div>
+
     <table id="productosTable">
         <thead>
             <tr>
@@ -191,7 +192,7 @@
                 <th>Efectos</th>
                 <th>Administración</th>
                 <th>Caducidad</th>
-                <th>Acción</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -357,14 +358,15 @@
                 productForm.caducidad.value = producto.caducidad;
                 document.getElementById("updateButton").setAttribute("data-id", id);
             } else {
-                console.error("No such document!");
+                alert("No se encontró el producto.");
             }
         };
 
         window.deleteProduct = async (id) => {
-            const docRef = doc(db, "producto", id);
-            await deleteDoc(docRef);
-            alert("Producto eliminado exitosamente.");
+            if (confirm("¿Está seguro de que desea eliminar este producto?")) {
+                await deleteDoc(doc(db, "producto", id));
+                alert("Producto eliminado exitosamente.");
+            }
         };
     </script>
 </body>
