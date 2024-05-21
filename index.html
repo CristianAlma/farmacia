@@ -11,22 +11,23 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             background-image: url('https://www.axiomafv.com/wp-content/uploads/2023/04/imagen.jpg');
             background-size: cover;
         }
         .container {
-           position: relative;
+            position: relative;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 800px;
             box-sizing: border-box;
+            background-color: #ffffff;
         }
-        .container img{
+        .container img {
             position: absolute;
             top: 0;
             left: 0;
@@ -34,7 +35,6 @@
             height: 100%;
             z-index: -1; 
         }
-        
         h1 {
             text-align: center;
             color: #333;
@@ -77,7 +77,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 32%;
+            width: 24%;
         }
         button:hover {
             background-color: #4c85ae;
@@ -94,74 +94,122 @@
             display: none;
             background-color: red;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .actions button {
+            width: 48%;
+            padding: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div><img src="https://scrconsultores.com.pe/wp-content/uploads/2023/11/2-1.png" alt=""></div>
-        <h1 style="margin-bottom: 20px;">BIENVENIDO</h1>
-        <h1 style="margin-bottom: 50px;" >GESTIÓN DE PRODUCTOS</h1>
+        <h1>BIENVENIDO</h1>
+        <h1>GESTIÓN DE PRODUCTOS</h1>
         <form id="form-product">
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Nombre:</h2>
+                <h2>Nombre:</h2>
                 <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del producto" required>
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Composición:</h2>
+                <h2>Composición:</h2>
                 <input type="text" id="composicion" name="composicion" placeholder="Ingrese la composición del producto">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Precio:</h2>
+                <h2>Precio:</h2>
                 <input type="text" id="precio" name="precio" placeholder="Ingrese el precio del producto">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Forma:</h2>
+                <h2>Forma:</h2>
                 <input type="text" id="forma" name="forma" placeholder="Ingrese la forma del producto">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Dosis:</h2>
+                <h2>Dosis:</h2>
                 <input type="text" id="dosis" name="dosis" placeholder="Ingrese la dosis del producto">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Indicaciones:</h2>
+                <h2>Indicaciones:</h2>
                 <input type="text" id="indicaciones" name="indicaciones" placeholder="Ingrese las indicaciones">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Contraindicaciones:</h2>
+                <h2>Contraindicaciones:</h2>
                 <input type="text" id="contraindicaciones" name="contraindicaciones" placeholder="Ingrese las contraindicaciones">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Efectos:</h2>
+                <h2>Efectos:</h2>
                 <input type="text" id="efectos" name="efectos" placeholder="Ingrese los efectos secundarios">
             </div>
             <div class="form-group">
-                <h2 style="margin-bottom: 10px;">Administración:</h2>
+                <h2>Administración:</h2>
                 <input type="text" id="administracion" name="administracion" placeholder="Ingrese el modo de administración del producto">
             </div>
             <div class="form-group full" style="display: flex; flex-direction: column; align-items: center;">
-                <h2 style="text-align: center; margin-bottom: 10px;" >Caducidad: </h2>
-                <input type="date" class="form-control" style="width: 50%; text-align: center; justify-content: center; align-items: center; " type="text" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
+                <h2>Caducidad:</h2>
+                <input type="date" class="form-control" style="width: 50%; text-align: center; justify-content: center; align-items: center;" id="caducidad" name="caducidad" placeholder="Ingrese la fecha de caducidad" required>
             </div>
             <div class="button-group">
                 <button type="submit" id="addButton">Agregar producto</button>
                 <button type="button" id="updateButton">Modificar producto</button>
                 <button type="button" id="deleteButton">Eliminar producto</button>
+                <button type="button" id="clearButton">Limpiar</button>
             </div>
             <div id="error-message" class="error-message"></div>
         </form>
     </div>
+    <table id="productosTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Composición</th>
+                <th>Precio</th>
+                <th>Forma</th>
+                <th>Dosis</th>
+                <th>Indicaciones</th>
+                <th>Contraindicaciones</th>
+                <th>Efectos</th>
+                <th>Administración</th>
+                <th>Caducidad</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los productos se mostrarán aquí -->
+        </tbody>
+    </table>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAJRq8icx68A9is7mZQpuxFhUNafah8jEs",
-            authDomain: "farmacia-df0a7.firebaseapp.com",
-            projectId: "farmacia-df0a7",
-            storageBucket: "farmacia-df0a7.appspot.com",
-            messagingSenderId: "507394726016",
-            appId: "1:507394726016:web:30ea6a67bce7155fd86e65"
+            apiKey: "API_KEY",
+            authDomain: "PROJECT_ID.firebaseapp.com",
+            projectId: "PROJECT_ID",
+            storageBucket: "PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -169,6 +217,7 @@
 
         const productForm = document.getElementById("form-product");
         const errorMessage = document.getElementById("error-message");
+        const productosTable = document.getElementById("productosTable").getElementsByTagName("tbody")[0];
 
         productForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -237,38 +286,86 @@
         });
 
         document.getElementById("updateButton").addEventListener("click", async () => {
-            errorMessage.style.display = "none";
-            const productName = productForm.nombre.value.trim();
-            if (productName) {
-                const q = query(collection(db, "producto"), where("nombre", "==", productName));
-                const querySnapshot = await getDocs(q);
+            const id = document.getElementById("updateButton").getAttribute("data-id");
+            if (id) {
+                const updateData = {};
+                if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
+                if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
+                if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
+                if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
+                if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
+                if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
+                if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
+                if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
+                if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
 
-                if (!querySnapshot.empty) {
-                    const updateData = {};
-                    if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
-                    if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
-                    if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
-                    if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
-                    if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
-                    if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
-                    if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
-                    if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
-                    if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
-
-                    querySnapshot.forEach(async (docSnapshot) => {
-                        await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
-                    });
-                    alert("Producto actualizado exitosamente.");
-                    productForm.reset();
-                } else {
-                    errorMessage.textContent = "Producto no encontrado.";
-                    errorMessage.style.display = "block";
-                }
+                const docRef = doc(db, "producto", id);
+                await updateDoc(docRef, updateData);
+                alert("Producto actualizado exitosamente.");
+                productForm.reset();
+                document.getElementById("updateButton").removeAttribute("data-id");
             } else {
-                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea modificar.";
+                errorMessage.textContent = "Seleccione un producto para modificar.";
                 errorMessage.style.display = "block";
             }
         });
+
+        document.getElementById("clearButton").addEventListener("click", () => {
+            productForm.reset();
+            errorMessage.style.display = "none";
+            document.getElementById("updateButton").removeAttribute("data-id");
+        });
+
+        onSnapshot(collection(db, "producto"), (snapshot) => {
+            productosTable.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const producto = doc.data();
+                const row = productosTable.insertRow();
+                row.innerHTML = `
+                    <td>${producto.nombre}</td>
+                    <td>${producto.composicion}</td>
+                    <td>${producto.precio}</td>
+                    <td>${producto.forma}</td>
+                    <td>${producto.dosis}</td>
+                    <td>${producto.indicaciones}</td>
+                    <td>${producto.contraindicaciones}</td>
+                    <td>${producto.efectos}</td>
+                    <td>${producto.administracion}</td>
+                    <td>${producto.caducidad}</td>
+                    <td class="actions">
+                        <button onclick="editProduct('${doc.id}')">Modificar</button>
+                        <button onclick="deleteProduct('${doc.id}')">Eliminar</button>
+                    </td>
+                `;
+            });
+        });
+
+        window.editProduct = async (id) => {
+            const docRef = doc(db, "producto", id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const producto = docSnap.data();
+                productForm.nombre.value = producto.nombre;
+                productForm.composicion.value = producto.composicion;
+                productForm.precio.value = producto.precio;
+                productForm.forma.value = producto.forma;
+                productForm.dosis.value = producto.dosis;
+                productForm.indicaciones.value = producto.indicaciones;
+                productForm.contraindicaciones.value = producto.contraindicaciones;
+                productForm.efectos.value = producto.efectos;
+                productForm.administracion.value = producto.administracion;
+                productForm.caducidad.value = producto.caducidad;
+                document.getElementById("updateButton").setAttribute("data-id", id);
+            } else {
+                console.error("No such document!");
+            }
+        };
+
+        window.deleteProduct = async (id) => {
+            const docRef = doc(db, "producto", id);
+            await deleteDoc(docRef);
+            alert("Producto eliminado exitosamente.");
+        };
     </script>
 </body>
 </html>
