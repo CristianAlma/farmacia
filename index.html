@@ -72,13 +72,13 @@
             margin-top: 15px;
         }
         button {
-            padding: 10px;
+            padding: 20px;
             background-color: #32b1dc;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 32%;
+            width: 40%;
         }
         button:hover {
             background-color: #4c85ae;
@@ -113,6 +113,29 @@
         th {
             background-color: #f2f2f2;
         }
+
+        table {
+        background-color: #fff;
+    }
+
+    /* Estilo de los botones de acción */
+    .delete-btn,
+    .update-btn {
+        padding: 10px 25px;
+        background-color: #dc3545; /* Rojo */
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-right: 5px;
+    }
+
+    /* Estilo al pasar el ratón sobre los botones de acción */
+    .delete-btn:hover,
+    .update-btn:hover {
+        background-color: #c82333; /* Rojo más oscuro */
+    }
     </style>
 </head>
 <body>
@@ -164,7 +187,7 @@
                 </div>
                 <div class="button-group">
                     <button type="submit" id="addButton">Agregar producto</button>
-                    <button type="button" id="updateButton">Modificar producto</button>
+                    <button type="button" id="updateButton" style="display: none;">Modificar producto</button>
                     <button type="button" id="deleteButton">Eliminar producto</button>
                 </div>
                 <div id="error-message" class="error-message"></div>
@@ -184,6 +207,7 @@
                     <th>Efectos</th>
                     <th>Administración</th>
                     <th>Caducidad</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="product-table-body">
@@ -191,7 +215,6 @@
             </tbody>
         </table>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -212,7 +235,7 @@
         const errorMessage = document.getElementById("error-message");
         const productTableBody = document.getElementById("product-table-body");
 
-        productForm.addEventListener("submit", async (e) => {
+        const productFormSubmitHandler = async (e) => {
             e.preventDefault();
             errorMessage.style.display = "none";
 
@@ -260,6 +283,10 @@
                     <td>${efectos}</td>
                     <td>${administracion}</td>
                     <td>${caducidad}</td>
+                    <td>
+                        <button class="delete-btn">Eliminar</button>
+                        <button class="update-btn">Modificar</button>
+                    </td>
                 `;
                 productTableBody.appendChild(newRow);
 
@@ -270,32 +297,9 @@
                 errorMessage.style.display = "block";
                 console.error("Error adding document: ", error);
             }
-        });
+        };
 
-        document.getElementById("deleteButton").addEventListener("click", async () => {
-            errorMessage.style.display = "none";
-            const productName = productForm.nombre.value.trim();
-            if (productName) {
-                const q = query(collection(db, "producto"), where("nombre", "==", productName));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    querySnapshot.forEach(async (docSnapshot) => {
-                        await deleteDoc(doc(db, "producto", docSnapshot.id));
-                    });
-                    alert("Producto eliminado exitosamente.");
-                    productForm.reset();
-                } else {
-                    errorMessage.textContent = "Producto no encontrado.";
-                    errorMessage.style.display = "block";
-                }
-            } else {
-                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea eliminar.";
-                errorMessage.style.display = "block";
-            }
-        });
-
-        document.getElementById("updateButton").addEventListener("click", async () => {
+        const productTableUpdateHandler = async (e) => {
             errorMessage.style.display = "none";
             const productName = productForm.nombre.value.trim();
             if (productName) {
@@ -317,17 +321,128 @@
                     querySnapshot.forEach(async (docSnapshot) => {
                         await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
                     });
-                    alert("Producto actualizado exitosamente.");
+
+                    // Actualizar la fila correspondiente en la tabla
+                    const updatedRow = querySnapshot.docs[0].data();
+                    const rowElements = document.querySelectorAll("#product-table-body tr");
+                    rowElements.forEach(row => {
+                        if (row.cells[0].textContent.trim() === productName) {
+                            row.cells[1].textContent = updatedRow.composicion;
+                            row.cells[2].textContent = updatedRow.precio;
+                            row.cells[3].textContent = updatedRow.forma;
+                            row.cells[4].textContent = updatedRow.dosis;
+                            row.cells[5].textContent = updatedRow.indicaciones;
+                            row.cells[6].textContent = updatedRow.contraindicaciones;
+                            row.cells[7].textContent = updatedRow.efectos;
+                            row.cells[8].textContent = updatedRow.administracion;
+                            row.cells[9].textContent = updatedRow.caducidad;
+                        }
+                    });
+
+                    alert("Producto modificado exitosamente.");
                     productForm.reset();
+                    document.getElementById("addButton").style.display = "block";
+                    document.getElementById("updateButton").style.display = "none";
                 } else {
                     errorMessage.textContent = "Producto no encontrado.";
                     errorMessage.style.display = "block";
                 }
             } else {
-                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea modificar.";
+                errorMessage.textContent = "Ingrese el nombre del producto.";
                 errorMessage.style.display = "block";
             }
+        };
+
+        const productTableDeleteHandler = async (e) => {
+            if (e.target.classList.contains("delete-btn")) {
+                const row = e.target.parentElement.parentElement;
+                const productName = row.cells[0].textContent.trim();
+                if (confirm(`¿Estás seguro de que deseas eliminar "${productName}"?`)) {
+                    try {
+                        const q = query(collection(db, "producto"), where("nombre", "==", productName));
+                        const querySnapshot = await getDocs(q);
+                        querySnapshot.forEach(async (docSnapshot) => {
+                            await deleteDoc(doc(db, "producto", docSnapshot.id));
+                        });
+                        row.remove();
+                        alert("Producto eliminado exitosamente.");
+                    } catch (error) {
+                        console.error("Error removing document: ", error);
+                    }
+                }
+            }
+        };
+
+        const productTableModifyHandler = (e) => {
+            if (e.target.classList.contains("update-btn")) {
+                const row = e.target.parentElement.parentElement;
+                const cells = row.cells;
+                productForm.nombre.value = cells[0].textContent.trim();
+                productForm.composicion.value = cells[1].textContent.trim();
+                productForm.precio.value = cells[2].textContent.trim();
+                productForm.forma.value = cells[3].textContent.trim();
+                productForm.dosis.value = cells[4].textContent.trim();
+                productForm.indicaciones.value = cells[5].textContent.trim();
+                productForm.contraindicaciones.value = cells[6].textContent.trim();
+                productForm.efectos.value = cells[7].textContent.trim();
+                productForm.administracion.value = cells[8].textContent.trim();
+                productForm.caducidad.value = cells[9].textContent.trim();
+
+                document.getElementById("addButton").style.display = "none";
+                document.getElementById("updateButton").style.display = "block";
+            }
+        };
+
+        productForm.addEventListener("submit", productFormSubmitHandler);
+        productTableBody.addEventListener("click", productTableDeleteHandler);
+        productTableBody.addEventListener("click", productTableModifyHandler);
+        document.getElementById("updateButton").addEventListener("click", productTableUpdateHandler);
+
+        // Función para actualizar un producto
+        const updateProduct = async (productName, updateData) => {
+            const q = query(collection(db, "producto"), where("nombre", "==", productName));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach(async (docSnapshot) => {
+                    await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
+                });
+
+                // Actualiza la tabla inmediatamente después de modificar el producto
+                loadProducts();
+
+                alert("Producto modificado exitosamente.");
+                productForm.reset();
+                document.getElementById("addButton").style.display = "block";
+                document.getElementById("updateButton").style.display = "none";
+            } else {
+                errorMessage.textContent = "Producto no encontrado.";
+                errorMessage.style.display = "block";
+            }
+        };
+
+        // Listener para el envío del formulario de modificación
+        document.getElementById("updateButton").addEventListener("click", async () => {
+            // Obtener datos del formulario
+            const productName = productForm.nombre.value.trim();
+            const updateData = {
+                // Aquí deberías obtener los datos actualizados del formulario
+                // Por ejemplo:
+                // composicion: productForm.composicion.value.trim(),
+                // precio: productForm.precio.value.trim(),
+                // forma: productForm.forma.value.trim(),
+                // etc.
+            };
+
+            // Llamar a la función de actualización
+            await updateProduct(productName, updateData);
         });
+
+        // Listener para los cambios en la colección "producto"
+        const productCollectionListener = onSnapshot(collection(db, "producto"), (snapshot) => {
+            loadProducts(); // Vuelve a cargar los productos en la tabla cuando hay cambios
+        });
+
     </script>
 </body>
 </html>
