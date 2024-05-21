@@ -77,7 +77,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 24%;
+            width: 32%;
         }
         button:hover {
             background-color: #4c85ae;
@@ -173,7 +173,6 @@
                 <button type="submit" id="addButton">Agregar producto</button>
                 <button type="button" id="updateButton">Modificar producto</button>
                 <button type="button" id="deleteButton">Eliminar producto</button>
-                <button type="button" id="clearButton">Limpiar</button>
             </div>
             <div id="error-message" class="error-message"></div>
         </form>
@@ -395,12 +394,6 @@
                 errorMessage.textContent = "Seleccione un producto para modificar.";
                 errorMessage.style.display = "block";
             }
-        });
-
-        document.getElementById("clearButton").addEventListener("click", () => {
-            productForm.reset();
-            errorMessage.style.display = "none";
-            document.getElementById("updateButton").removeAttribute("data-id");
         });
     </script>
 </body>
