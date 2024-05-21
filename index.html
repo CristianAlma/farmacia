@@ -202,7 +202,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "API_KEY",
@@ -287,34 +287,37 @@
         });
 
         document.getElementById("updateButton").addEventListener("click", async () => {
-            const id = document.getElementById("updateButton").getAttribute("data-id");
-            if (id) {
-                const updateData = {};
-                if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
-                if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
-                if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
-                if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
-                if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
-                if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
-                if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
-                if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
-                if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
+            errorMessage.style.display = "none";
+            const productName = productForm.nombre.value.trim();
+            if (productName) {
+                const q = query(collection(db, "producto"), where("nombre", "==", productName));
+                const querySnapshot = await getDocs(q);
 
-                const docRef = doc(db, "producto", id);
-                await updateDoc(docRef, updateData);
-                alert("Producto actualizado exitosamente.");
-                productForm.reset();
-                document.getElementById("updateButton").removeAttribute("data-id");
+                if (!querySnapshot.empty) {
+                    const updateData = {};
+                    if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
+                    if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
+                    if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
+                    if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
+                    if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
+                    if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
+                    if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
+                    if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
+                    if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
+
+                    querySnapshot.forEach(async (docSnapshot) => {
+                        await updateDoc(doc(db, "producto", docSnapshot.id), updateData);
+                    });
+                    alert("Producto actualizado exitosamente.");
+                    productForm.reset();
+                } else {
+                    errorMessage.textContent = "Producto no encontrado.";
+                    errorMessage.style.display = "block";
+                }
             } else {
-                errorMessage.textContent = "Seleccione un producto para modificar.";
+                errorMessage.textContent = "Por favor, ingrese el nombre del producto que desea modificar.";
                 errorMessage.style.display = "block";
             }
-        });
-
-        document.getElementById("clearButton").addEventListener("click", () => {
-            productForm.reset();
-            errorMessage.style.display = "none";
-            document.getElementById("updateButton").removeAttribute("data-id");
         });
 
         onSnapshot(collection(db, "producto"), (snapshot) => {
@@ -368,6 +371,37 @@
                 alert("Producto eliminado exitosamente.");
             }
         };
+
+        document.getElementById("updateButton").addEventListener("click", async () => {
+            const id = document.getElementById("updateButton").getAttribute("data-id");
+            if (id) {
+                const updateData = {};
+                if (productForm.composicion.value.trim()) updateData.composicion = productForm.composicion.value.trim();
+                if (productForm.precio.value.trim()) updateData.precio = productForm.precio.value.trim();
+                if (productForm.forma.value.trim()) updateData.forma = productForm.forma.value.trim();
+                if (productForm.dosis.value.trim()) updateData.dosis = productForm.dosis.value.trim();
+                if (productForm.indicaciones.value.trim()) updateData.indicaciones = productForm.indicaciones.value.trim();
+                if (productForm.contraindicaciones.value.trim()) updateData.contraindicaciones = productForm.contraindicaciones.value.trim();
+                if (productForm.efectos.value.trim()) updateData.efectos = productForm.efectos.value.trim();
+                if (productForm.administracion.value.trim()) updateData.administracion = productForm.administracion.value.trim();
+                if (productForm.caducidad.value.trim()) updateData.caducidad = productForm.caducidad.value.trim();
+
+                const docRef = doc(db, "producto", id);
+                await updateDoc(docRef, updateData);
+                alert("Producto actualizado exitosamente.");
+                productForm.reset();
+                document.getElementById("updateButton").removeAttribute("data-id");
+            } else {
+                errorMessage.textContent = "Seleccione un producto para modificar.";
+                errorMessage.style.display = "block";
+            }
+        });
+
+        document.getElementById("clearButton").addEventListener("click", () => {
+            productForm.reset();
+            errorMessage.style.display = "none";
+            document.getElementById("updateButton").removeAttribute("data-id");
+        });
     </script>
 </body>
 </html>
