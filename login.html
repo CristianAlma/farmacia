@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Farmacia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(logo3.jpg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .login-container {
+            background-image: url(logo3.jpg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(239, 238, 238, 0.1);
+            width: 300px;
+            text-align: center;
+            margin-left: 20px;
+            margin-top: 65px;
+            color: white;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #32b1dc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .google-button {
+            background-color: #32b1dc;
+        }
+
+        .google-button:hover {
+            background-color: #c23321;
+        }
+
+        .custom-button {
+            background-color: #4285f4;
+        }
+
+        .custom-button:hover {
+            background-color: #357ae8;
+        }
+
+        .history-container {
+            background-image: url(logo2.jpg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            margin-right: 20px;
+        }
+
+        .history-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .history-container p {
+            text-align: justify;
+            color: white;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="history-container">
+            <h2><strong>FARMACÉUTICA KCLEM</strong></h2>
+            <p><strong>Alcance</strong></p>
+            <p>En farmacéutica KClem, nos especializamos en la investigación, desarrollo, producción y comercialización de medicamentos de alta calidad y seguros para el tratamiento de diversas enfermedades, por ende, nos comprometemos a mejorar la salud y la calidad de vida de nuestros pacientes a través de productos efectivos y accesibles.</p>
+            <p><strong>Misión</strong></p>
+            <p>Nuestra misión es proporcionar soluciones farmacéuticas innovadoras y accesibles que mejoren la salud y el bienestar de las personas en todo el mundo, nos esforzamos por ser líderes en la industria farmacéutica mediante el uso de tecnología avanzada y la investigación científica de vanguardia.</p>
+            <p><strong>Visión</strong></p>
+            <p>Nuestra visión es ser reconocidos globalmente como una empresa farmacéutica líder que transforma vidas a través de la innovación y la excelencia en el cuidado de la salud, aspiramos a ser el socio de confianza para pacientes, profesionales de la salud y comunidades, promoviendo una vida más saludable y sostenible.</p>
+        </div>
+
+        <div class="login-container">
+            <h2>Iniciar Sesión</h2>
+            <form action="/login" method="post">
+                <div class="input-group">
+                    <label for="email">Usuario</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="button" id="reg1">Registrar</button>
+                <button type="button" id="log2">Ingresar</button>
+                <button type="button" class="google-button" id="login-google">Ingresar con Google</button>
+                <div id="error-message" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJRq8icx68A9is7mZQpuxFhUNafah8jEs",
+            authDomain: "farmacia-df0a7.firebaseapp.com",
+            projectId: "farmacia-df0a7",
+            storageBucket: "farmacia-df0a7.appspot.com",
+            messagingSenderId: "507394726016",
+            appId: "1:507394726016:web:30ea6a67bce7155fd86e65"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const logemailInput = document.getElementById('email');
+            const logpasswordInput = document.getElementById('password');
+            const log2 = document.getElementById('log2');
+            const reg1 = document.getElementById('reg1');
+            const logingoogle = document.getElementById('login-google');
+            const errorMessage = document.getElementById('error-message');
+
+            log2.addEventListener('click', (e) => {
+                e.preventDefault();
+                const email = logemailInput.value;
+                const password = logpasswordInput.value;
+
+                if (!email) {
+                    errorMessage.textContent = "Por favor, ingrese un correo electrónico.";
+                    return;
+                }
+
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        console.log('Usuario ingresado:', user);
+                        window.location.href = 'index.html';
+                    })
+                    .catch((error) => {
+                        console.error('Error durante la autenticación:', error);
+                        if (error.code === 'auth/user-not-found') {
+                            errorMessage.textContent = 'Correo inexistente, ingrese datos válidos.';
+                        } else if (error.code === 'auth/wrong-password') {
+                            errorMessage.textContent = 'Coloca una contraseña correcta.';
+                        } else {
+                            errorMessage.textContent = `Error: ${error.message}`;
+                        }
+                    });
+            });
+
+            reg1.addEventListener('click', (e) => {
+                e.preventDefault();
+                const email = logemailInput.value;
+                const password = logpasswordInput.value;
+
+                if (!email) {
+                    errorMessage.textContent = "Por favor, coloque un correo electrónico";
+                    return;
+                }
+
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        console.log('Usuario registrado:', user);
+                        errorMessage.textContent = "Se ha registrado correctamente.";
+                    })
+                    .catch((error) => {
+                        console.error('Error durante el registro:', error);
+                        if (error.code === 'auth/invalid-email') {
+                            errorMessage.textContent = 'Correo inválido, intente nuevamente.';
+                        } else {
+                            errorMessage.textContent = `Error: ${error.message}`;
+                        }
+                    });
+            });
+        });
+
+        // Iniciar Sesión con Google
+        const inicioGoogle = document.getElementById("login-google");
+        inicioGoogle.addEventListener('click', async(e) =>{
+            e.preventDefault();
+            await signInWithPopup(auth, provider)
+                .then((result) => {
+                    const credential = GoogleAuthProvider.credentialFromResult(result);
+                    const token = credential.accessToken;
+                    const user = result.user;
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    const email = error.customData.email;
+                    const credential = GoogleAuthProvider.credentialFromError(error);
+                    console.log(error);
+                });
+        });
+    </script>
+
+</body>
+</html>
