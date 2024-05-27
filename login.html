@@ -131,7 +131,7 @@
 
         <div class="login-container">
             <h2>Iniciar Sesión</h2>
-            <form>
+            <form action="/login" method="post">
                 <div class="input-group">
                     <label for="email">Usuario</label>
                     <input type="email" id="email" name="email" required>
@@ -226,29 +226,25 @@
                         }
                     });
             });
+        });
 
-            // Iniciar Sesión con Google
-            logingoogle.addEventListener('click', (e) => {
-                e.preventDefault();
-                signInWithPopup(auth, provider)
-                    .then((result) => {
-                        const credential = GoogleAuthProvider.credentialFromResult(result);
-                        const token = credential.accessToken;
-                        const user = result.user;
-                        console.log('Usuario autenticado con Google:', user);
-                        window.location.href = 'index.html';
-                    })
-                    .catch((error) => {
-                        console.error('Error durante la autenticación con Google:', error);
-                        if (error.code === 'auth/account-exists-with-different-credential') {
-                            errorMessage.textContent = 'Esta cuenta ya está vinculada con otro método de autenticación.';
-                        } else if (error.code === 'auth/popup-closed-by-user') {
-                            errorMessage.textContent = 'El popup de autenticación se cerró antes de completar el proceso. Por favor, inténtelo nuevamente.';
-                        } else {
-                            errorMessage.textContent = `Error: ${error.message}`;
-                        }
-                    });
-            });
+        // Iniciar Sesión con Google
+        const inicioGoogle = document.getElementById("login-google");
+        inicioGoogle.addEventListener('click', async(e) =>{
+            e.preventDefault();
+            await signInWithPopup(auth, provider)
+                .then((result) => {
+                    const credential = GoogleAuthProvider.credentialFromResult(result);
+                    const token = credential.accessToken;
+                    const user = result.user;
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    const email = error.customData.email;
+                    const credential = GoogleAuthProvider.credentialFromError(error);
+                    console.log(error);
+                });
         });
     </script>
 
